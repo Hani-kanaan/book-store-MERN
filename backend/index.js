@@ -1,14 +1,26 @@
 import express from "express";
-import {PORT} from "./config.js"
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
+dotenv.config();
 
-const app = express()
+export const PORT = process.env.PORT;
+export const mongoDBURL = process.env.MONGODB_URL;
+const app = express();
 
-app.get('/' , (request , response) =>{
-    console.log(request)
-    return response.status(234).send('helloo')
-})
+app.get("/", (request, response) => {
+  //console.log(request)
+  return response.status(234).send("helloo");
+});
 
-app.listen(PORT , ()=>{
-    console.log(`app listening to port: ${PORT}`)
-} )
+mongoose
+  .connect(mongoDBURL)
+  .then(() => {
+    console.log("app connected to DB");
+    app.listen(PORT, () => {
+      console.log(`app listening to port: ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
